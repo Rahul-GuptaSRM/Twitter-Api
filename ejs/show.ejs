@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hello</title>
+<link href='/stylesheet/style1.css' type="text/css" rel='stylesheet'>
+<link rel="stylesheet" href="/stylesheet/bootstrap.min.css">
+<title><%= title %></title>
+
+<style>
+a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.previous {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+.next {
+	float: right;
+}
+</style>
+</head>
+<body>
+
+
+<div class="top">
+		<div>
+		 Contact Us +91 9791488984 | iamrahulgupta231@outlook.com 
+		</div>
+		<a style="padding:10px;float:right" href="/logout" class="btn btn-warning"><span class="fa fa-twitter"></span>Log Out</a>
+	</div>
+	
+	<div class="logo">
+		<div>
+			<table>
+				<tr>
+					<td width="600px" style="font-size:50px;font-family:forte;"> <font color="#428bca"> Twitter  </font><font color="#000"> API </font> </td>
+					<td> <br> <br>
+						<font size="4px"> 
+							<a href="#">HOME</a> 
+							<a href="#">ABOUT US</a>  
+							<a href="#">SERVICE</a>
+							<a href="#">HELLO</a> 
+							<a href="#">CONTACT US</a>
+						</font>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+	</div>
+	
+	
+	<div>
+
+	</div>
+
+<% food.forEach(function (eachtweet) {%>
+
+	 <a href="app/rubrics?id=<%= eachtweet%>" ><%= eachtweet%></a>
+	
+   
+<%});%>
+<br />
+<!--<a href='/app?data=<%= next %>' class="btn btn-primary"><span class="fa fa-twitter"></span>NEXT</a>-->
+
+
+<% if(prev != 0){ %>
+<!--<a href="#" class="previous">&laquo; Previous</a>-->
+<a href='/app?data=<%= next %>' class="btn btn-primary" style="float: left;">PREV</a>
+<% } %>
+
+<% if(next != 0){ %>
+	
+	<a href='/app?data=<%= next %>' class="btn btn-primary" style="float: right;">NEXT</a>
+<% } %>
+
+
+</div>
+	</div>
+<hr><hr>
+</body>
+</html>

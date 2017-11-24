@@ -1,0 +1,31 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.7",
+    "express": "^4.15.3",
+    "express-session": "^1.15.2",
+    "machine_learning": "^0.1.1",
+    "mongoose": "^4.9.7",
+    "morgan": "latest",
+    "node-kmeans": "^1.1.0",
+    "passport": "latest",
+    "passport-facebook": "^2.1.1",
+    "passport-local": "latest",
+    "passport-twitter": "^1.0.4",
+    "serve-favicon": "^2.4.3",
+    "twit": "^2.2.9",
+    "twitter": "^1.7.1"
+  }
+}
