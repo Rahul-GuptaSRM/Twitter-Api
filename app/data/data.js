@@ -1,23 +1,28 @@
 'use strict';
 
 const fs = require('fs');
-const kmeans = require('node-kmeans');
-let rawdata = fs.readFileSync('./app/data/twitter1.JSON');
-var token =  require("../../config/twitter-auth");
+const kmeans = require('node-kmeans');// module to apply l
+
+
+let rawdata = fs.readFileSync('./app/data/twitter1.JSON'); // including my data to train the model
+var token =  require("../../config/twitter-auth");// including all my tokens here
 module.exports = function(app,ml,twit)
 {
 
-let student = JSON.parse(rawdata);
-let vectors_chirrpy = new Array();
+let student = JSON.parse(rawdata);// Parsing my json data
+
+let vectors_chirrpy = new Array(); 
 let vectors_influ = new Array();
+
+/*-----------initializing the max of each variable---------*/
 let max_stat =0;
 let max_fav = 0;
 let max_listed = 0
 let max_follower =0;
 let max_friends = 0;
-
+/*-----------------------*/
 var n= student.length; 
-
+/*------------calculating the max of each variable--------*/
 for (let i = 0 ; i<n; i++) {
 
           if(max_stat  < student[i]["stat_count"])
@@ -40,9 +45,10 @@ for (let i = 0 ; i<n; i++) {
             max_friends = student[i]["friends_count"];
            }
          }
-
+         /*--------------------------*/
+/*--------------creating the arrays on the basis of different variable  and scaling the value----------------*/
 for (let i = 0 ; i <n; i++) {
- // vectors[i] = [student[i]["stat_count"], student[i]["fav_count"], student[i]["listed_count"]];
+ 
  vectors_chirrpy[i] = [(student[i]["stat_count"]/max_stat)*10 , (student[i]["fav_count"]/max_fav)*10 , (student[i]["listed_count"]/max_listed)*10 ];
 }
 
@@ -50,6 +56,9 @@ for (let i = 0 ; i <n; i++) {
  vectors_influ[i] = [(student[i]["stat_count"]/max_stat)*10 , (student[i]["followers_count"]/max_follower)*10];
 }
 
+/*--------------------------------------------------------------------------------*/
+
+/*---------------applying the clustering algorithm----------------*/
 var result_chirrpy = ml.kmeans.cluster({
     data : vectors_chirrpy,
     k : 2,
@@ -64,7 +73,11 @@ var result_influ = ml.kmeans.cluster({
  
     distance : {type : "euclidean"}
 });
+
+/*----------------------------------------------*/
 //console.log(result["means"][1]);
+
+/* taking the centroid of each above clustering algorithms---------------*/
 var x_chrippy =result_chirrpy["means"][1][0];
 var y_chrippy = result_chirrpy["means"][1][1];
 var z_chrippy = result_chirrpy["means"][1][2];
@@ -72,21 +85,29 @@ var z_chrippy = result_chirrpy["means"][1][2];
 var x_influ =result_influ["means"][1][0];
 var y_influ = result_influ["means"][1][1];
 var client = new twit({
-
+/*---------------------------------------------*/
   consumer_key: token.twitterAuth.consumerKey,
   consumer_secret:token.twitterAuth.consumerSecret,
   access_token:token.twitterAuth.accessToken,
   access_token_secret: token.twitterAuth.accessTokenSecret
 });
+
+
+
+
+
+/*-----------when user user clicks of their follower id this route will get invoke--------------*/
 app.get('/app/rubrics',isLoggedIn,function(req,res)
 {
 
  var a = (req.param('id'))
  var b = a.toString();
+ /*taking out follower's info --------------*/
  client.get('users/show',{user_id : a},function(error,follow,response)
 {
 
   var _listed = 0;
+  //checking if the returned value is undefined or not////////*/
 if(follow.listed_count != undefined)
 {
    _listed= (follow.listed_count/max_listed)*10;
@@ -117,6 +138,9 @@ var _follow = 0;
 
 
 
+
+
+/*------------calculating the difference between cetroid and follower's data and doing the calculations------------*/
 var x_temp1 = Math.pow(x_chrippy  - _listed,2);
 var y_temp1 = Math.pow(y_chrippy - _fav,2);
 var z_temp1 = Math.pow(z_chrippy - _stat,2);
@@ -155,6 +179,7 @@ if(_friend>2)
     _friend : _friend
   }
   };
+  // showing the user's data
  res.render('../ejs/data.ejs',data);
 });
 
