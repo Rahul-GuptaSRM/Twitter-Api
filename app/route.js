@@ -19,17 +19,22 @@ app.get('/auth/twitter',
             failureRedirect : '/'
         }));
 
+
+
   app.get('/app',isLoggedIn,function(req,res)
 {
+  res.cookie("key", "ghjg");
   var a = req.param('data');
 var user_name = req.user["twitter"]["username"];
-console.log(req.user);
+
 var use = user_name.toString();
 if(a == undefined)
 {
   a = -1;
 }
-client.get('followers/ids',{screen_name :use, cursor:a, stringify_ids : true},function(error,follow,response)
+
+// calling the twitter api
+client.get('followers/ids',{screen_name :use, cursor : a, stringify_ids : true},function(error,follow,response)
  {
 var data = {
 
@@ -38,18 +43,28 @@ var data = {
     prev : follow["previous_cursor_str"],
     next : follow["next_cursor_str"]
   };
-       res.render('../ejs/show.ejs',data);
+     res.render('../ejs/show.ejs',data);
 });
 
 });
 
-app.get('/logout',function(req,res)
-{
-req.logout();
-res.redirect('/');
+app.get('/logout', function(req, res) {
+ cookie = req.cookies;
+    for (var prop in cookie) {
+        if (!cookie.hasOwnProperty(prop)) {
+            continue;
+        }    
+        res.cookie(prop, '', {expires: new Date(0)});
+    }
 
-})
+       // req.logout();
+        res.redirect('/');
+    });
+
+  
 };
+
+// check whether user is loggedin or not
  function isLoggedIn(req,res,next)
  {
   if(req.isAuthenticated()){
