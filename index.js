@@ -18,7 +18,7 @@ app.use(morgan('dev'));
 
 var dbURI = 'mongodb://localhost:27017/teamie';
 mongoose.Promise = global.Promise;
-mongoose.connect(dbURI,function(err)
+mongoose.connect(dbURI,{useMongoClient: true},function(err)
 	{
 		if(err)
           {
@@ -38,9 +38,11 @@ app.use(session({secret: 'mySecretKey',saveUninitialized: true,resave:true}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-require('./config/passport.js')(passport);
- require('./app/route.js')(app,passport,Twit);
- require('./app/data/data.js')(app,ml,Twit);
+
+
+require('./config/passport.js')(passport);// for twitter authentucation 
+ require('./app/route.js')(app,passport,Twit);// for hndling all the routes
+ require('./app/data/data.js')(app,ml,Twit); //examine the each user 
 
 
 
